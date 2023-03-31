@@ -4,7 +4,6 @@ with open('token.txt', 'r') as file:
 import discord
 import asyncio
 from discord.ext import commands
-
 intents = discord.Intents.all()
 
 bot = commands.Bot(command_prefix='%', intents=intents)
