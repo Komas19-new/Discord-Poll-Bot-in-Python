@@ -23,11 +23,33 @@ async def find_message(client, message_id):
                 pass
     return None
 
+async def delete_message(ctx):
+    done = await ctx.send("We are done! Deleting this message in 5 seconds")
+    await asyncio.sleep(1)
+    await done.edit(content="We are done! Deleting this message in 4 seconds")
+    await asyncio.sleep(1)
+    await done.edit(content="We are done! Deleting this message in 3 seconds")
+    await asyncio.sleep(1)
+    await done.edit(content="We are done! Deleting this message in 2 seconds")
+    await asyncio.sleep(1)
+    await done.edit(content="We are done! Deleting this message in 1 seconds")
+    await asyncio.sleep(1)
+    await done.edit(content="We are done! Deleting this message now")
+    await asyncio.sleep(1)
+    await done.delete()
+
 
 @bot.command()
 async def poll(ctx, arg1: str, *args: str):
-    role_id = 1091406351550390295
-    banned_role = discord.utils.get(ctx.guild.roles, id=role_id)
+    role_ids = [1091406351550390295, 1091717942112166069]
+    banned_role = None
+    for role_id in role_ids:
+        banned_role = discord.utils.get(ctx.guild.roles, id=role_id)
+        if banned_role:
+            break
+    if banned_role in ctx.author.roles:
+        await ctx.send(f"{ctx.author.mention}, **You are banned from using this bot!**")
+        return
     if banned_role in ctx.author.roles:
         await ctx.send(f"{ctx.author.mention}, **You are banned from using this bot!**")
         return
@@ -42,30 +64,11 @@ async def poll(ctx, arg1: str, *args: str):
         author = ctx.author.display_name + "#" + ctx.author.discriminator
         embed.set_author(name=author)
         poll_text = await ctx.send(embed=embed)  # send the poll text
-        await poll_text.add_reaction("1️⃣")
-        await poll_text.add_reaction("2️⃣")
-        await poll_text.add_reaction("3️⃣")
-        await poll_text.add_reaction("4️⃣")
-        await poll_text.add_reaction("5️⃣")
-        await poll_text.add_reaction("6️⃣")
-        await poll_text.add_reaction("7️⃣")
-        await poll_text.add_reaction("8️⃣")
-        await poll_text.add_reaction("9️⃣")
-        await poll_text.add_reaction("🔟")
+        emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+        for emoji in emojis:
+            await poll_text.add_reaction(emoji)
         print("added all")
-        done = await ctx.send("We are done! Deleting this message in 5 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 4 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 3 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 2 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 1 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message now")
-        await asyncio.sleep(1)
-        await done.delete()
+        delete_message(ctx)
     elif arg1.lower() == 'number':
         print("executed %poll number [number] [text]")
         if len(args) < 2:
@@ -89,19 +92,7 @@ async def poll(ctx, arg1: str, *args: str):
             await poll_text.add_reaction(emoji)  # add the reactions to the poll message
             print("added one emoji")
         print("added all")
-        done = await ctx.send("We are done! Deleting this message in 5 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 4 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 3 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 2 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 1 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message now")
-        await asyncio.sleep(1)
-        await done.delete()
+        delete_message(ctx)
     elif arg1.lower() == 'regular':
         print("executed %poll regular [text]")
         if len(args) < 1:
@@ -113,30 +104,25 @@ async def poll(ctx, arg1: str, *args: str):
         author = ctx.author.display_name + "#" + ctx.author.discriminator
         embed.set_author(name=author)
         poll_text = await ctx.send(embed=embed)  # send the poll text
-        await poll_text.add_reaction('✅')  # add the checkmark reaction to the poll message
-        await poll_text.add_reaction('🤷')  # add the don't know reaction to the poll message
-        await poll_text.add_reaction('❌')  # add the x reaction to the poll message
+        emojis = ["✅", "🤷", "❌"]
+        for emoji in emojis:
+            await poll_text.add_reaction(emoji)
         print("added reactions ✅🤷❌")
-        done = await ctx.send("We are done! Deleting this message in 5 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 4 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 3 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 2 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 1 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message now")
-        await asyncio.sleep(1)
-        await done.delete()
+        delete_message(ctx)
     else:
         await ctx.send("Invalid command format. Use !cmds for help.")
 
 @bot.command()
 async def pollto(ctx, message: int, subcommand: str, *args: str):
-    role_id = 1091406351550390295
-    banned_role = discord.utils.get(ctx.guild.roles, id=role_id)
+    role_ids = [1091406351550390295, 1091717942112166069]
+    banned_role = None
+    for role_id in role_ids:
+        banned_role = discord.utils.get(ctx.guild.roles, id=role_id)
+        if banned_role:
+            break
+    if banned_role in ctx.author.roles:
+        await ctx.send(f"{ctx.author.mention}, **You are banned from using this bot!**")
+        return
     if banned_role in ctx.author.roles:
         await ctx.send(f"{ctx.author.mention}, **You are banned from using this bot!**")
         return
@@ -147,30 +133,11 @@ async def pollto(ctx, message: int, subcommand: str, *args: str):
         print("executed %pollto [message_id] number-10")
         await ctx.message.delete()  # delete the original message
         poll_message = await ctx.fetch_message(message)  # get the poll message
-        await poll_message.add_reaction("1️⃣")
-        await poll_message.add_reaction("2️⃣")
-        await poll_message.add_reaction("3️⃣")
-        await poll_message.add_reaction("4️⃣")
-        await poll_message.add_reaction("5️⃣")
-        await poll_message.add_reaction("6️⃣")
-        await poll_message.add_reaction("7️⃣")
-        await poll_message.add_reaction("8️⃣")
-        await poll_message.add_reaction("9️⃣")
-        await poll_message.add_reaction("🔟")
+        emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+        for emoji in emojis:
+            await poll_message.add_reaction(emoji)
         print("added all")
-        done = await ctx.send("We are done! Deleting this message in 5 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 4 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 3 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 2 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 1 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message now")
-        await asyncio.sleep(1)
-        await done.delete()
+        delete_message(ctx)
     elif subcommand.lower() == 'number':
         print("executed %pollto [message_id] number [num]")
         if len(args) < 1:
@@ -191,48 +158,43 @@ async def pollto(ctx, message: int, subcommand: str, *args: str):
             await poll_message.add_reaction(emoji)  # add the reactions to the poll message
             print("added one emoji")
         print("added all")
-        done = await ctx.send("We are done! Deleting this message in 5 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 4 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 3 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 2 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 1 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message now")
-        await asyncio.sleep(1)
-        await done.delete()
+        delete_message(ctx)
     elif subcommand.lower() == 'regular':
         print("executed %pollto [message_id] regular")
         await ctx.message.delete()  # delete the original message
         poll_message = await ctx.fetch_message(message)  # get the poll message
-        await poll_message.add_reaction('✅')  # add the checkmark reaction to the poll message
-        await poll_message.add_reaction('🤷')  # add the don't know reaction to the poll message
-        await poll_message.add_reaction('❌')  # add the x reaction to the poll message
+        emojis = ["✅", "🤷", "❌"]
+        for emoji in emojis:
+            await poll_message.add_reaction(emoji)
         print("added reactions ✅🤷❌")
-        done = await ctx.send("We are done! Deleting this message in 5 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 4 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 3 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 2 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message in 1 seconds")
-        await asyncio.sleep(1)
-        await done.edit(content="We are done! Deleting this message now")
-        await asyncio.sleep(1)
-        await done.delete()
+        delete_message(ctx)
+
     else:
         await ctx.send("Invalid command format. Use %cmds for help.")
 
+@bot.command()
+async def cache(ctx):
+    await ctx.send("Clearing cache...")
+    bot.clear()
+    await ctx.send("Cache cleared.")
+
+@bot.command()
+async def checkroles(ctx):
+    await ctx.send("Sending..")
+    role_ids = [r.id for r in ctx.author.roles if r is not None]
+    num_roles = len(role_ids)
+    print(f"Number of roles: {num_roles}")
+    print(f"Role IDs: {role_ids}")
+    await ctx.send("Your roles have been sent to this bot's console. ({} Roles found)".format(num_roles))
 
 @bot.command()
 async def cmds(ctx):
-    role_id = 1091406351550390295
-    banned_role = discord.utils.get(ctx.guild.roles, id=role_id)
+    role_ids = [1091406351550390295, 1091717942112166069]
+    banned_role = None
+    for role_id in role_ids:
+        banned_role = discord.utils.get(ctx.guild.roles, id=role_id)
+        if banned_role:
+            break
     if banned_role in ctx.author.roles:
         await ctx.send(f"{ctx.author.mention}, **You are banned from using this bot!**")
         return
@@ -240,7 +202,8 @@ async def cmds(ctx):
         print("bot detected tried %cmds")
         return
     embed = discord.Embed(title="Commands", description="You can use all of these commands.", color=0x00ff00)
-    embed.set_author(name=ctx.author.display_name)
+    author = ctx.author.display_name + "#" + ctx.author.discriminator
+    embed.set_author(name=author)
     embed.add_field(name="%poll number [num] [text]", value="Create a poll with a specified number of options from 1 to 9", inline=False)
     embed.add_field(name="%poll number-10 [text]", value="Create a poll with 10 options", inline=False)
     embed.add_field(name="%poll regular [text]", value="Create a poll with two options (yes/no)", inline=False)
