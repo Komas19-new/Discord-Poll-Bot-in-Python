@@ -92,7 +92,7 @@ async def poll(ctx, arg1: str, *args: str):
             await poll_text.add_reaction(emoji)  # add the reactions to the poll message
             print("added one emoji")
         print("added all")
-        delete_message(ctx)
+        await delete_message(ctx)
     elif arg1.lower() == 'regular':
         print("executed %poll regular [text]")
         if len(args) < 1:
@@ -108,7 +108,7 @@ async def poll(ctx, arg1: str, *args: str):
         for emoji in emojis:
             await poll_text.add_reaction(emoji)
         print("added reactions ✅🤷❌")
-        delete_message(ctx)
+        await delete_message(ctx)
     else:
         await ctx.send("Invalid command format. Use !cmds for help.")
 
@@ -137,7 +137,7 @@ async def pollto(ctx, message: int, subcommand: str, *args: str):
         for emoji in emojis:
             await poll_message.add_reaction(emoji)
         print("added all")
-        delete_message(ctx)
+        await delete_message(ctx)
     elif subcommand.lower() == 'number':
         print("executed %pollto [message_id] number [num]")
         if len(args) < 1:
@@ -158,7 +158,7 @@ async def pollto(ctx, message: int, subcommand: str, *args: str):
             await poll_message.add_reaction(emoji)  # add the reactions to the poll message
             print("added one emoji")
         print("added all")
-        delete_message(ctx)
+        await delete_message(ctx)
     elif subcommand.lower() == 'regular':
         print("executed %pollto [message_id] regular")
         await ctx.message.delete()  # delete the original message
@@ -167,25 +167,53 @@ async def pollto(ctx, message: int, subcommand: str, *args: str):
         for emoji in emojis:
             await poll_message.add_reaction(emoji)
         print("added reactions ✅🤷❌")
-        delete_message(ctx)
+        await delete_message(ctx)
 
     else:
         await ctx.send("Invalid command format. Use %cmds for help.")
 
 @bot.command()
 async def cache(ctx):
-    await ctx.send("Clearing cache...")
-    bot.clear()
-    await ctx.send("Cache cleared.")
+    if ctx.author.id == 827176666320207872:
+        await ctx.send("Clearing cache...")
+        bot.clear()
+        await ctx.send("Cache cleared.")
+        await ctx.send("Please restart the bot. Any command sent now will be broken.")
+    else:
+        await ctx.send("You do not have permission to use this command.")
+
+@bot.command()
+@commands.has_permissions(kick_members=True)
+async def kick(ctx, user: discord.Member, *, reason: str = None):
+    if user == ctx.author:
+        await ctx.send("You cannot kick yourself!")
+    elif user == ctx.guild.me:
+        await ctx.send("I cannot kick myself!")
+    elif user.top_role >= ctx.author.top_role:
+        await ctx.send("You cannot kick this user due to role hierarchy!")
+    else:
+        await user.kick(reason=reason)
+        if reason:
+            await ctx.send(f"{user.mention} has been kicked for reason: {reason}")
+        else:
+            await ctx.send(f"{user.mention} has been kicked.")
+
 
 @bot.command()
 async def checkroles(ctx):
-    await ctx.send("Sending..")
-    role_ids = [r.id for r in ctx.author.roles if r is not None]
-    num_roles = len(role_ids)
-    print(f"Number of roles: {num_roles}")
-    print(f"Role IDs: {role_ids}")
-    await ctx.send("Your roles have been sent to this bot's console. ({} Roles found)".format(num_roles))
+    if ctx.author.id == 827176666320207872:
+        await ctx.send("Sending..")
+        role_ids = [r.id for r in ctx.author.roles if r is not None]
+        num_roles = len(role_ids)
+        print(f"Number of roles: {num_roles}")
+        print(f"Role IDs: {role_ids}")
+        await ctx.send("Your roles have been sent to this bot's console. ({} Roles found)".format(num_roles))
+    else:
+        role_ids = [r.id for r in ctx.author.roles if r is not None]
+        num_roles = len(role_ids)
+        print(f"Number of roles: {num_roles}")
+        print(f"Role IDs: {role_ids}")
+        await ctx.send("You do not have permission to use this command. The roles are still sending to console. Which is {} roles".format(num_roles))
 
 @bot.command()
 async def cmds(ctx):
@@ -197,6 +225,12 @@ async def cmds(ctx):
             break
     if banned_role in ctx.author.roles:
         await ctx.send(f"{ctx.author.mention}, **You are banned from using this bot!**")
+        return
+    staff_id = 1053364516928364544
+    staff_role = None
+    staff_role = discord.utils.get(ctx.guild.roles, id=role_id)
+    if staff_role in ctx.author.roles:
+        await ctx.send(f"")
         return
     if ctx.author.bot:
         print("bot detected tried %cmds")
@@ -210,6 +244,9 @@ async def cmds(ctx):
     embed.add_field(name="%pollto [message_id] number [num]", value="Create a poll on a already existing message with a specified number of options", inline=False)
     embed.add_field(name="%pollto [message_id] number-10", value="Create a poll on a already existing message with 10 options", inline=False)
     embed.add_field(name="%pollto [message_id] regular", value="Create a poll on a already existing message with three options (yes/don't know/no)", inline=False)
+    if staff_role in ctx.author.roles:
+        embed.add_field(name="%kick [member]", value="Kicks the specified member", inline=False)
+        return
     await ctx.send(embed=embed)
 
 bot.run(TOKEN)
