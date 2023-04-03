@@ -223,14 +223,14 @@ async def on_message(message):
         "BITCH",
         "dick sucker",
         "dick rider",
-        "dick",
+        "dickhead",
         "kys"
     ]
     if message.author == bot.user:
         return
-    bad_words = ['bad', 'sucks', 'terrible', 'awful', 'suck', 'trash', 'shit', 'garbage', 'deleted', 'worst', 'shit', 'fuck','kys']
+    bad_words = ['bad', 'sucks', 'terrible', 'awful', 'suck', 'trash', 'shit', 'garbage', 'deleted', 'worst', 'shit', 'fuck','kys','horrible','noob']
     swear = random.choice(messages)
-    pollbotstrings = "poll bot" in message.content.lower() or "pollbot" in message.content.lower() or bot.user.mentioned_in(message) and any(word in message.content.lower())
+    pollbotstrings = "poll bot" in message.content.lower() or "pollbot" in message.content.lower() or bot.user.mentioned_in(message)
     if (pollbotstrings and any(word in message.content.lower() for word in bad_words)):
         await message.channel.send(f"{message.author.mention}, {swear}")
     await bot.process_commands(message)
