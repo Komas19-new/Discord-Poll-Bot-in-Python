@@ -10,4 +10,6 @@ replace TOKENHERE and OWNERIDHERE in .env to the bots token and owner's discord 
 
 now edit main.py and replace ROLE, IDS, HERE with the roles you want
 
-then simply run run_bot.bat or run_bot.sh if you are on linux
+then run pip install -r requirements.txt
+
+after that simply run run_bot.bat or run_bot.sh if you are on linux
