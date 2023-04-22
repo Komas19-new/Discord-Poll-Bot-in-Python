@@ -4,6 +4,7 @@ aiosignal>=1.1.2
 async-timeout>=4.0.0a3
 attrs>=17.3.0
 charset-normalizer>=2
+certifi>=2017.4.17
 discord.py==2.1.0
 frozenlist>=1.0.0
 idna>=2.5
